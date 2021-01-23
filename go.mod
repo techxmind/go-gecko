@@ -1,4 +1,4 @@
-module github.com/superoo7/go-gecko
+module github.com/techxmind/go-gecko
 
 go 1.15
 
