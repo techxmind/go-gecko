@@ -62,6 +62,29 @@ func TestSimplePrice(t *testing.T) {
 	}
 }
 
+func TestSimpleTokenPrice(t *testing.T) {
+	err := setupGock("json/simple_token_price.json", "/simple/token_price/ethereum")
+	if err != nil {
+		t.FailNow()
+	}
+	id := "ethereum"
+	contractAddresses := []string{"0x0000000000b3f879cb30fe243b4dfee438691c04", "0x0000000000085d4780b73119b644ae5ecd22b376"}
+	vc := []string{"usd", "eth"}
+	sp, err := c.SimpleTokenPrice(id, contractAddresses, vc)
+	if err != nil {
+		t.FailNow()
+	}
+	token1 := (*sp)["0x0000000000b3f879cb30fe243b4dfee438691c04"]
+	token2 := (*sp)["0x0000000000085d4780b73119b644ae5ecd22b376"]
+
+	if token1["usd"] != 123.97 || token1["eth"] != 0.09814846 {
+		t.FailNow()
+	}
+	if token2["usd"] != 1.0 || token2["eth"] != 0.00079236 {
+		t.FailNow()
+	}
+}
+
 func TestSimpleSupportedVSCurrencies(t *testing.T) {
 	err := setupGock("json/simple_supported_vs_currencies.json", "/simple/supported_vs_currencies")
 	s, err := c.SimpleSupportedVSCurrencies()
