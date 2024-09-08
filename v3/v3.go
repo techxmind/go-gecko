@@ -19,11 +19,12 @@ var baseURLPro = "https://pro-api.coingecko.com/api/v3"
 type Client struct {
 	baseURL    string
 	apiKey     string
+	userAgent  string
 	httpClient *http.Client
 }
 
 // NewClient create new client object
-func NewClient(httpClient *http.Client, apiKey string) *Client {
+func NewClient(httpClient *http.Client, apiKey, userAgent string) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
@@ -31,7 +32,7 @@ func NewClient(httpClient *http.Client, apiKey string) *Client {
 	if apiKey != "" {
 		base = baseURLPro
 	}
-	return &Client{httpClient: httpClient, baseURL: base, apiKey: apiKey}
+	return &Client{httpClient: httpClient, baseURL: base, apiKey: apiKey, userAgent: userAgent}
 }
 
 // helper
@@ -57,6 +58,9 @@ func (c *Client) MakeReq(url string) ([]byte, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if c.apiKey != "" {
 		req.Header.Set("x-cg-pro-api-key", c.apiKey)
+	}
+	if c.userAgent != "" {
+		req.Header.Set("User-Agent", c.userAgent)
 	}
 	if err != nil {
 		return nil, err
